@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2027학년도 교육계획 수립을 위한 학생 설문조사 - 목포청호초등학교</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font (Inter & Pretendard) -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetSurvey()">
+                <div class="bg-white text-indigo-600 p-2 rounded-xl font-bold text-xl shadow">
+                    <i class="fa-solid fa-school"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">목포청호초등학교</h1>
+                    <p class="text-xs text-indigo-200">2027학년도 교육계획 수립 설문조사 (학생용)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="surveyNavBtn" onclick="resetSurvey()" class="bg-indigo-500 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-1">
+                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                    <span>설문조사</span>
+                </button>
+                <button id="adminBtn" onclick="openAdminModal()" class="bg-indigo-700 hover:bg-indigo-800 text-white px-3 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-1 border border-indigo-500">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>관리자 모드</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
+        
+        <!-- Welcome / Notice View -->
+        <div id="introView" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6">
+            <div class="text-center mb-6">
+                <span class="inline-block bg-indigo-50 text-indigo-600 font-semibold text-xs px-3 py-1 rounded-full mb-3">설문 안내</span>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">여러분의 소중한 목소리를 들려주세요!</h2>
+                <p class="text-slate-600 text-sm max-w-xl mx-auto">
+                    이 설문은 2026학년도 학교 교육 만족도를 돌아보고 2027학년도 더 멋진 학교를 만들기 위해 진행됩니다. 구글 로그인 없이 번호 입력만으로 간편하고 솔직하게 참여해 주세요!
+                </p>
+            </div>
+
+            <!-- Vision Box -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border border-indigo-100 mb-6">
+                <h3 class="font-bold text-indigo-900 text-sm mb-3 flex items-center">
+                    <i class="fa-solid fa-compass text-indigo-600 mr-2"></i>목포청호초등학교 비전 및 교육목표
+                </h3>
+                <div class="bg-white p-3 rounded-lg shadow-xs text-xs font-semibold text-indigo-800 mb-3 text-center">
+                    비전: 함께 꿈꾸고 서로를 배려하며 자신의 능력을 키워가는 행복한 학교
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
+                    <div class="bg-white p-2.5 rounded-lg border border-indigo-50 shadow-xs">
+                        <span class="font-bold text-indigo-600 block mb-1">더새롬</span>기초학력·생각 깨우침
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-indigo-50 shadow-xs">
+                        <span class="font-bold text-indigo-600 block mb-1">더나눔</span>배려와 나눔 실천
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-indigo-50 shadow-xs">
+                        <span class="font-bold text-indigo-600 block mb-1">더채움</span>몸과 마음 건강 키움
+                    </div>
+                    <div class="bg-white p-2.5 rounded-lg border border-indigo-50 shadow-xs">
+                        <span class="font-bold text-indigo-600 block mb-1">더큰꿈</span>소질 계발 및 꿈 가꾸기
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="startSurvey()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition transform active:scale-95">
+                    설문조사 시작하기 <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Survey Form View -->
+        <form id="surveyForm" onsubmit="submitSurvey(event)" class="space-y-6 hidden">
+            
+            <!-- Student Info Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center">
+                    <i class="fa-solid fa-user-graduate text-indigo-600 mr-2"></i>학생 정보 확인
+                </h3>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">학년 선택 <span class="text-red-500">*</span></label>
+                    <select name="grade" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <option value="">-- 학년 선택 --</option>
+                        <option value="3학년">3학년</option>
+                        <option value="4학년">4학년</option>
+                        <option value="5학년">5학년</option>
+                        <option value="6학년">6학년</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Q1 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">1. 여러분은 우리 학교생활에 어느 정도 만족하고 있습니까?</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex flex-col items-center justify-center text-xs font-medium">
+                        <input type="radio" name="q2" value="매우 만족" required class="mb-2 text-indigo-600 focus:ring-indigo-500"> 매우 만족
+                    </label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex flex-col items-center justify-center text-xs font-medium">
+                        <input type="radio" name="q2" value="만족" class="mb-2 text-indigo-600 focus:ring-indigo-500"> 만족
+                    </label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex flex-col items-center justify-center text-xs font-medium">
+                        <input type="radio" name="q2" value="보통" class="mb-2 text-indigo-600 focus:ring-indigo-500"> 보통
+                    </label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex flex-col items-center justify-center text-xs font-medium">
+                        <input type="radio" name="q2" value="불만족" class="mb-2 text-indigo-600 focus:ring-indigo-500"> 불만족
+                    </label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex flex-col items-center justify-center text-xs font-medium col-span-2 sm:col-span-1">
+                        <input type="radio" name="q2" value="매우 불만족" class="mb-2 text-indigo-600 focus:ring-indigo-500"> 매우 불만족
+                    </label>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">2-1. 그렇게 생각한 이유는 무엇입니까?</label>
+                    <input type="text" name="q2_reason" placeholder="이유를 간단히 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">2. 자신에게 가장 고민이 되는 부분은 무엇입니까?</p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-medium">
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="성적" required class="text-indigo-600"> <span>① 성적</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="친구" class="text-indigo-600"> <span>② 친구</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="외모" class="text-indigo-600"> <span>③ 외모</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="건강" class="text-indigo-600"> <span>④ 건강</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="이성 친구" class="text-indigo-600"> <span>⑤ 이성 친구</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="가족" class="text-indigo-600"> <span>⑥ 가족</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="학교폭력" class="text-indigo-600"> <span>⑦ 학교폭력</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="진로" class="text-indigo-600"> <span>⑧ 진로</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q3" value="기타" class="text-indigo-600"> <span>⑨ 기타</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">3. 우리 학교 교육활동 중에서 가장 중요하다고 생각되는 것은 무엇입니까?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-medium">
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="공부(학력)" required class="text-indigo-600"> <span>① 공부(학력)</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="올바른 인성" class="text-indigo-600"> <span>② 올바른 인성</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="진로교육" class="text-indigo-600"> <span>③ 진로교육</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="안전교육" class="text-indigo-600"> <span>④ 안전교육</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="예술교육" class="text-indigo-600"> <span>⑤ 예술교육</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="환경교육" class="text-indigo-600"> <span>⑥ 환경교육</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="건강(체력·놀이)" class="text-indigo-600"> <span>⑦ 건강(체력·놀이)</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="창의성 신장" class="text-indigo-600"> <span>⑧ 창의성 신장</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="정보교육(SW-AI)" class="text-indigo-600"> <span>⑨ 정보교육(SW-AI)</span>
+                    </label>
+                    <label class="border rounded-xl p-3 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition flex items-center space-x-2">
+                        <input type="radio" name="q4" value="기타" class="text-indigo-600"> <span>⑩ 기타</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-1 text-sm md:text-base">4. 자신의 성장에 가장 중요하다고 생각되는 과목은 무엇인가요?</p>
+                <p class="text-xs text-indigo-600 font-medium mb-3"><i class="fa-solid fa-circle-info mr-1"></i> 최대 2개까지 선택할 수 있습니다.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium" id="q5Container">
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="국어" class="text-indigo-600 q5-check"><span>국어</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="도덕" class="text-indigo-600 q5-check"><span>도덕</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="사회" class="text-indigo-600 q5-check"><span>사회</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="수학" class="text-indigo-600 q5-check"><span>수학</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="과학" class="text-indigo-600 q5-check"><span>과학</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="체육" class="text-indigo-600 q5-check"><span>체육</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="음악" class="text-indigo-600 q5-check"><span>음악</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="미술" class="text-indigo-600 q5-check"><span>미술</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="실과" class="text-indigo-600 q5-check"><span>실과</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q5" value="영어" class="text-indigo-600 q5-check"><span>영어</span></label>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-1 text-sm md:text-base">5. 자신이 공부할 때 어렵다고(부족하다고) 생각되는 과목은 무엇인가요?</p>
+                <p class="text-xs text-indigo-600 font-medium mb-3"><i class="fa-solid fa-circle-info mr-1"></i> 최대 2개까지 선택할 수 있습니다.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium" id="q6Container">
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="국어" class="text-indigo-600 q6-check"><span>국어</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="도덕" class="text-indigo-600 q6-check"><span>도덕</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="사회" class="text-indigo-600 q6-check"><span>사회</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="수학" class="text-indigo-600 q6-check"><span>수학</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="과학" class="text-indigo-600 q6-check"><span>과학</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="체육" class="text-indigo-600 q6-check"><span>체육</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="음악" class="text-indigo-600 q6-check"><span>음악</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="미술" class="text-indigo-600 q6-check"><span>미술</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="실과" class="text-indigo-600 q6-check"><span>실과</span></label>
+                    <label class="border rounded-xl p-2.5 cursor-pointer hover:bg-indigo-50 flex items-center space-x-2"><input type="checkbox" name="q6" value="영어" class="text-indigo-600 q6-check"><span>영어</span></label>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">6-1. 그 과목이 가장 어렵다고(부족하다고) 생각된 이유는 무엇입니까?</label>
+                    <input type="text" name="q6_reason" placeholder="이유를 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Q6: 운동회 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">6. 우리 학교 운동회는 운동장에서 전교생이 함께 참여합니다. 이에 대해 어떻게 생각합니까?</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium">
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q7" value="매우 만족" required class="mb-1 block mx-auto text-indigo-600">매우 만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q7" value="만족" class="mb-1 block mx-auto text-indigo-600">만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q7" value="보통" class="mb-1 block mx-auto text-indigo-600">보통</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q7" value="불만족" class="mb-1 block mx-auto text-indigo-600">불만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 col-span-2 sm:col-span-1"><input type="radio" name="q7" value="매우 불만족" class="mb-1 block mx-auto text-indigo-600">매우 불만족</label>
+                </div>
+                <div class="mt-3">
+                    <input type="text" name="q7_reason" placeholder="운동회에 대한 이유나 생각을 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Q7: 성과발표회 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">7. 우리 학교 성과발표회는 각 학급별로 운영됩니다. 이에 대해 어떻게 생각합니까?</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium">
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q8" value="매우 만족" required class="mb-1 block mx-auto text-indigo-600">매우 만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q8" value="만족" class="mb-1 block mx-auto text-indigo-600">만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q8" value="보통" class="mb-1 block mx-auto text-indigo-600">보통</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q8" value="불만족" class="mb-1 block mx-auto text-indigo-600">불만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 col-span-2 sm:col-span-1"><input type="radio" name="q8" value="매우 불만족" class="mb-1 block mx-auto text-indigo-600">매우 불만족</label>
+                </div>
+                <div class="mt-3">
+                    <input type="text" name="q8_reason" placeholder="성과발표회에 대한 이유나 생각을 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Q8: 현장체험학습 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">8. 우리 학교 학년별 현장체험학습에 대해 어떻게 생각합니까?</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium">
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q9" value="매우 만족" required class="mb-1 block mx-auto text-indigo-600">매우 만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q9" value="만족" class="mb-1 block mx-auto text-indigo-600">만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q9" value="보통" class="mb-1 block mx-auto text-indigo-600">보통</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q9" value="불만족" class="mb-1 block mx-auto text-indigo-600">불만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 col-span-2 sm:col-span-1"><input type="radio" name="q9" value="매우 불만족" class="mb-1 block mx-auto text-indigo-600">매우 불만족</label>
+                </div>
+                <div class="mt-3">
+                    <input type="text" name="q9_wish" placeholder="현장체험학습에 대해 바라는 점을 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Q9: 학생회 활동 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-3 text-sm md:text-base">9. 학생회 활동에 대해서 어떻게 생각합니까?</p>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs font-medium">
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q10" value="매우 만족" required class="mb-1 block mx-auto text-indigo-600">매우 만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q10" value="만족" class="mb-1 block mx-auto text-indigo-600">만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q10" value="보통" class="mb-1 block mx-auto text-indigo-600">보통</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50"><input type="radio" name="q10" value="불만족" class="mb-1 block mx-auto text-indigo-600">불만족</label>
+                    <label class="border rounded-xl p-3 text-center cursor-pointer hover:bg-indigo-50 col-span-2 sm:col-span-1"><input type="radio" name="q10" value="매우 불만족" class="mb-1 block mx-auto text-indigo-600">매우 불만족</label>
+                </div>
+                <div class="mt-3">
+                    <input type="text" name="q10_reason" placeholder="학생회 활동에 대한 이유를 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Q10: 올해 좋았던 점 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-2 text-sm md:text-base">10. 올해 학교 교육활동 중에서 가장 기억에 남거나 좋았던 점(행사)이 있다면 무엇입니까?</p>
+                <textarea name="q11" rows="3" placeholder="자유롭게 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+            </div>
+
+            <!-- Q11: 바라는 점 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <p class="font-bold text-slate-900 mb-2 text-sm md:text-base">11. 열심히 공부하고 행복하게 학교생활을 하는 데 우리 학교에서 꼭 해주었으면 하는 것이 있으면 자유롭게 적어주세요.</p>
+                <textarea name="q12" rows="3" placeholder="자유롭게 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+            </div>
+
+            <!-- Submit Button Box -->
+            <div class="text-center pt-4 pb-12">
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-10 py-4 rounded-xl shadow-lg text-base transition transform active:scale-95">
+                    <i class="fa-solid fa-paper-plane mr-2"></i>설문조사 제출하기
+                </button>
+            </div>
+        </form>
+
+        <!-- Completion View -->
+        <div id="completeView" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center hidden">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">설문이 성공적으로 제출되었습니다!</h2>
+            <p class="text-slate-600 text-sm mb-6">소중한 의견은 2027학년도 목포청호초등학교 교육계획 수립에 소중하게 활용됩니다. 감사합니다!</p>
+            <button onclick="resetSurvey()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition">
+                처음으로 돌아가기
+            </button>
+        </div>
+
+        <!-- Admin Dashboard View -->
+        <div id="adminView" class="space-y-6 hidden">
+            <div class="bg-indigo-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <span class="bg-indigo-800 text-indigo-200 text-xs px-2.5 py-1 rounded-full font-semibold">관리자 모드</span>
+                    <h2 class="text-xl font-bold mt-2">목포청호초등학교 설문조사 관리 센터</h2>
+                    <p class="text-xs text-indigo-300">관리자 인증 완료 | 실시간 응답 집계 및 구글 스프레드시트 연동</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition flex items-center space-x-1">
+                        <i class="fa-solid fa-file-excel"></i>
+                        <span>엑셀 다운로드 (CSV)</span>
+                    </button>
+                    <button onclick="resetSurvey()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition flex items-center space-x-1">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>설문조사 화면으로</span>
+                    </button>
+                    <button onclick="logoutAdmin()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition">
+                        나가기
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Password Change & Google Sheet Settings -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Password Change Box -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="font-bold text-slate-900 text-sm mb-2 flex items-center">
+                        <i class="fa-solid fa-key text-indigo-600 mr-2"></i>관리자 비밀번호 변경
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4">
+                        학생들이 유추하지 못하도록 안전한 비밀번호로 변경하세요. (현재 브라우저에 저장됩니다)
+                    </p>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-600 mb-1">새 비밀번호 입력</label>
+                            <input type="password" id="newAdminPwd" placeholder="새 비밀번호 입력" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-600 mb-1">새 비밀번호 확인</label>
+                            <input type="password" id="confirmAdminPwd" placeholder="새 비밀번호 재입력" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <button onclick="changeAdminPassword()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition">비밀번호 변경하기</button>
+                    </div>
+                </div>
+
+                <!-- Google Sheet Connection Box -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="font-bold text-slate-900 text-sm mb-2 flex items-center">
+                        <i class="fa-brands fa-google-drive text-emerald-600 mr-2"></i>구글 스프레드시트 연동 안내
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-3">
+                        학생들의 응답을 구글 스프레드시트로 바로 받기 위해 앱스 스크립트 웹훅 URL을 입력할 수 있습니다.
+                    </p>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                        <span class="font-bold text-slate-800 block">구글 앱스 스크립트 웹훅 URL</span>
+                        <div class="flex space-x-2">
+                            <input type="text" id="webhookUrl" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow bg-white border border-slate-300 rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                            <button onclick="saveWebhook()" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-700">저장</button>
+                        </div>
+                        <p class="text-[11px] text-slate-500">또는 언제든지 [엑셀 다운로드 (CSV)]를 통해 엑셀 파일로 백업할 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">총 응답 학생 수</span>
+                    <span id="totalResponses" class="text-2xl font-bold text-indigo-600 mt-1 block">0명</span>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">3·4학년 참여</span>
+                    <span id="juniorCount" class="text-2xl font-bold text-slate-800 mt-1 block">0명</span>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">5·6학년 참여</span>
+                    <span id="seniorCount" class="text-2xl font-bold text-slate-800 mt-1 block">0명</span>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <span class="text-xs text-slate-500 font-medium block">학교만족도 평균</span>
+                    <span id="satisfactionAvg" class="text-2xl font-bold text-emerald-600 mt-1 block">-</span>
+                </div>
+            </div>
+
+            <!-- Detailed Question Stats Tabs -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="font-bold text-slate-900 text-sm mb-4 flex items-center justify-between">
+                    <span><i class="fa-solid fa-chart-pie text-indigo-600 mr-2"></i>문항별 통계 결과</span>
+                    <span class="text-xs text-slate-500 font-normal">학생들이 응답한 결과의 누적 통계입니다.</span>
+                </h3>
+                
+                <div id="statsContent" class="space-y-6">
+                    <!-- Dynamic Stats injected here -->
+                </div>
+            </div>
+
+            <!-- Individual Responses Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="font-bold text-slate-900 text-sm mb-4 flex items-center justify-between">
+                    <span><i class="fa-solid fa-table text-indigo-600 mr-2"></i>개별 응답 목록 (최신순)</span>
+                    <button onclick="clearAllData()" class="text-xs text-rose-500 hover:text-rose-700 underline font-medium">모든 데이터 초기화</button>
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-600 border-b">
+                            <tr>
+                                <th class="p-3">제출일시</th>
+                                <th class="p-3">학년</th>
+                                <th class="p-3">학교만족도</th>
+                                <th class="p-3">고민</th>
+                                <th class="p-3">중요 교육활동</th>
+                                <th class="p-3">성장 중요과목</th>
+                                <th class="p-3">어려운 과목</th>
+                            </tr>
+                        </thead>
+                        <tbody id="responseTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200 m-4">
+            <h3 class="font-bold text-lg text-slate-900 mb-2">관리자 로그인</h3>
+            <p id="adminModalDesc" class="text-xs text-slate-600 mb-4">관리자 비밀번호를 입력해 주세요. (기본: 2027)</p>
+            <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm mb-4 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <div class="flex space-x-2">
+                <button onclick="closeAdminModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-2.5 rounded-xl text-sm font-medium transition">취소</button>
+                <button onclick="verifyAdminPassword()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message Modal (Replacing alert) -->
+    <div id="msgModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200 m-4 text-center">
+            <div id="msgIcon" class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 text-lg">
+                <i class="fa-solid fa-info"></i>
+            </div>
+            <h3 id="msgTitle" class="font-bold text-base text-slate-900 mb-1">알림</h3>
+            <p id="msgText" class="text-xs text-slate-600 mb-5">메시지 내용입니다.</p>
+            <button onclick="closeMsgModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-sm font-medium transition">확인</button>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-auto">
+        <p>목포청호초등학교 | 2027학년도 교육계획 수립 설문조사 시스템</p>
+    </footer>
+
+    <script>
+        // Password helper
+        function getCurrentAdminPassword() {
+            return localStorage.getItem('chungho_admin_pwd') || '2027';
+        }
+
+        // Limit checkbox selection for Q5 and Q6 (Max 2)
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('q5-check')) {
+                const checked = document.querySelectorAll('.q5-check:checked');
+                if (checked.length > 2) {
+                    e.target.checked = false;
+                    showModal('알림', '성장에 가장 중요하다고 생각되는 과목은 최대 2개까지만 선택할 수 있습니다.');
+                }
+            }
+            if (e.target.classList.contains('q6-check')) {
+                const checked = document.querySelectorAll('.q6-check:checked');
+                if (checked.length > 2) {
+                    e.target.checked = false;
+                    showModal('알림', '어렵다고 생각되는 과목은 최대 2개까지만 선택할 수 있습니다.');
+                }
+            }
+        });
+
+        function showModal(title, text, isSuccess = true) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgText').innerText = text;
+            const iconDiv = document.getElementById('msgIcon');
+            if (isSuccess) {
+                iconDiv.className = "w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-lg";
+                iconDiv.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else {
+                iconDiv.className = "w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-3 text-lg";
+                iconDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+            document.getElementById('msgModal').classList.remove('hidden');
+        }
+
+        function closeMsgModal() {
+            document.getElementById('msgModal').classList.add('hidden');
+        }
+
+        function startSurvey() {
+            document.getElementById('introView').classList.add('hidden');
+            document.getElementById('surveyForm').classList.remove('hidden');
+            document.getElementById('completeView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetSurvey() {
+            document.getElementById('surveyForm').reset();
+            document.getElementById('completeView').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('introView').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Local Storage data handler
+        function getStoredResponses() {
+            const data = localStorage.getItem('chungho_survey_responses_2027');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveResponse(formDataObj) {
+            const responses = getStoredResponses();
+            responses.unshift(formDataObj); // Add newest first
+            localStorage.setItem('chungho_survey_responses_2027', JSON.stringify(responses));
+
+            // Sync with Google Apps Script Webhook if configured
+            const webhookUrl = localStorage.getItem('chungho_webhook_url');
+            if (webhookUrl) {
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formDataObj)
+                }).catch(err => console.log('Webhook sync notice:', err));
+            }
+        }
+
+        function submitSurvey(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const q5Arr = [];
+            form.querySelectorAll('.q5-check:checked').forEach(cb => q5Arr.push(cb.value));
+            
+            const q6Arr = [];
+            form.querySelectorAll('.q6-check:checked').forEach(cb => q6Arr.push(cb.value));
+
+            const record = {
+                timestamp: new Date().toLocaleString(),
+                grade: formData.get('grade'),
+                q2: formData.get('q2'),
+                q2_reason: formData.get('q2_reason') || '',
+                q3: formData.get('q3'),
+                q4: formData.get('q4'),
+                q5: q5Arr.join(', '),
+                q6: q6Arr.join(', '),
+                q6_reason: formData.get('q6_reason') || '',
+                q7: formData.get('q7'),
+                q7_reason: formData.get('q7_reason') || '',
+                q8: formData.get('q8'),
+                q8_reason: formData.get('q8_reason') || '',
+                q9: formData.get('q9'),
+                q9_wish: formData.get('q9_wish') || '',
+                q10: formData.get('q10'),
+                q10_reason: formData.get('q10_reason') || '',
+                q11: formData.get('q11') || '',
+                q12: formData.get('q12') || ''
+            };
+
+            saveResponse(record);
+
+            form.classList.add('hidden');
+            document.getElementById('completeView').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Admin Modal Controls
+        function openAdminModal() {
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function verifyAdminPassword() {
+            const pwd = document.getElementById('adminPasswordInput').value;
+            const correctPwd = getCurrentAdminPassword();
+            if (pwd === correctPwd) {
+                closeAdminModal();
+                enterAdminMode();
+            } else {
+                showModal('비밀번호 오류', '비밀번호가 올바르지 않습니다.', false);
+            }
+        }
+
+        function changeAdminPassword() {
+            const newPwd = document.getElementById('newAdminPwd').value.trim();
+            const confirmPwd = document.getElementById('confirmAdminPwd').value.trim();
+
+            if (!newPwd) {
+                showModal('입력 오류', '새 비밀번호를 입력해주세요.', false);
+                return;
+            }
+            if (newPwd !== confirmPwd) {
+                showModal('불일치', '새 비밀번호와 확인 비밀번호가 일치하지 않습니다.', false);
+                return;
+            }
+
+            localStorage.setItem('chungho_admin_pwd', newPwd);
+            document.getElementById('newAdminPwd').value = '';
+            document.getElementById('confirmAdminPwd').value = '';
+            showModal('변경 완료', '관리자 비밀번호가 성공적으로 변경되었습니다. 다음 로그인부터 새 비밀번호가 적용됩니다.');
+        }
+
+        function enterAdminMode() {
+            document.getElementById('introView').classList.add('hidden');
+            document.getElementById('surveyForm').classList.add('hidden');
+            document.getElementById('completeView').classList.add('hidden');
+            document.getElementById('adminView').classList.remove('hidden');
+            
+            // Load Webhook URL input if saved
+            const savedWebhook = localStorage.getItem('chungho_webhook_url');
+            if (savedWebhook) {
+                document.getElementById('webhookUrl').value = savedWebhook;
+            }
+
+            renderAdminDashboard();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('introView').classList.remove('hidden');
+        }
+
+        function saveWebhook() {
+            const url = document.getElementById('webhookUrl').value.trim();
+            localStorage.setItem('chungho_webhook_url', url);
+            showModal('저장 완료', '구글 스프레드시트 웹훅 URL이 저장되었습니다. 앞으로 설문 제출 시 자동으로 연동됩니다.');
+        }
+
+        function renderAdminDashboard() {
+            const responses = getStoredResponses();
+            const total = responses.length;
+            document.getElementById('totalResponses').innerText = total + '명';
+
+            let junior = 0;
+            let senior = 0;
+            let satScoreSum = 0;
+            let satCount = 0;
+
+            const satMap = { '매우 만족': 5, '만족': 4, '보통': 3, '불만족': 2, '매우 불만족': 1 };
+
+            responses.forEach(r => {
+                if (r.grade === '3학년' || r.grade === '4학년') junior++;
+                if (r.grade === '5학년' || r.grade === '6학년') senior++;
+                if (satMap[r.q2]) {
+                    satScoreSum += satMap[r.q2];
+                    satCount++;
+                }
+            });
+
+            document.getElementById('juniorCount').innerText = junior + '명';
+            document.getElementById('seniorCount').innerText = senior + '명';
+            
+            if (satCount > 0) {
+                const avg = (satScoreSum / satCount).toFixed(2);
+                document.getElementById('satisfactionAvg').innerText = `${avg} / 5.0`;
+            } else {
+                document.getElementById('satisfactionAvg').innerText = '데이터 없음';
+            }
+
+            // Render Table
+            const tbody = document.getElementById('responseTableBody');
+            tbody.innerHTML = '';
+            if (total === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">아직 제출된 응답이 없습니다.</td></tr>`;
+            } else {
+                responses.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition';
+                    tr.innerHTML = `
+                        <td class="p-3 text-slate-500">${r.timestamp}</td>
+                        <td class="p-3 font-semibold text-indigo-600">${r.grade}</td>
+                        <td class="p-3">${r.q2}</td>
+                        <td class="p-3">${r.q3}</td>
+                        <td class="p-3">${r.q4}</td>
+                        <td class="p-3">${r.q5 || '-'}</td>
+                        <td class="p-3">${r.q6 || '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Render Aggregated Stats Breakdown
+            const statsContainer = document.getElementById('statsContent');
+            statsContainer.innerHTML = '';
+
+            const getCounts = (key) => {
+                const map = {};
+                responses.forEach(r => {
+                    const val = r[key];
+                    if (val) {
+                        val.split(', ').forEach(sub => {
+                            map[sub] = (map[sub] || 0) + 1;
+                        });
+                    }
+                });
+                return map;
+            };
+
+            const qList = [
+                { title: '1. 학교생활 만족도 (Q2)', key: 'q2' },
+                { title: '2. 가장 고민되는 부분 (Q3)', key: 'q3' },
+                { title: '3. 가장 중요하다고 생각되는 교육활동 (Q4)', key: 'q4' },
+                { title: '4. 성장에 가장 중요하다고 생각되는 과목 (Q5)', key: 'q5' },
+                { title: '5. 공부할 때 어려운 과목 (Q6)', key: 'q6' },
+                { title: '6. 운동회 전교생 함께 참여 만족도 (Q7)', key: 'q7' },
+                { title: '7. 성과발표회 학급별 운영 만족도 (Q8)', key: 'q8' },
+                { title: '8. 현장체험학습 만족도 (Q9)', key: 'q9' },
+                { title: '9. 학생회 활동 만족도 (Q10)', key: 'q10' }
+            ];
+
+            qList.forEach(q => {
+                const counts = getCounts(q.key);
+                const div = document.createElement('div');
+                div.className = 'bg-slate-50 p-4 rounded-xl border border-slate-200';
+                
+                let barsHTML = '';
+                const totalAnswers = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+                
+                for (const [ans, count] of Object.entries(counts)) {
+                    const pct = Math.round((count / totalAnswers) * 100);
+                    barsHTML += `
+                        <div class="mb-2">
+                            <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                                <span>${ans}</span>
+                                <span>${count}명 (${pct}%)</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                <div class="bg-indigo-600 h-2 rounded-full" style="width: ${pct}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (Object.keys(counts).length === 0) {
+                    barsHTML = '<p class="text-xs text-slate-400">응답 데이터 없음</p>';
+                }
+
+                div.innerHTML = `
+                    <h4 class="font-bold text-xs text-slate-800 mb-3">${q.title}</h4>
+                    <div class="space-y-1">${barsHTML}</div>
+                `;
+                statsContainer.appendChild(div);
+            });
+        }
+
+        function exportToCSV() {
+            const responses = getStoredResponses();
+            if (responses.length === 0) {
+                showModal('알림', '다운로드할 데이터가 없습니다.', false);
+                return;
+            }
+
+            let csv = '\uFEFF제출일시,학년,학교만족도,만족이유,고민,중요교육활동,중요과목,어려운과목,어려운이유,운동회만족도,운동회이유,성과발표회만족도,성과발표회이유,현장체험만족도,현장체험바람,학생회만족도,학생회이유,좋았던점,바라는점\n';
+            responses.forEach(r => {
+                csv += `"${r.timestamp}","${r.grade}","${r.q2}","${r.q2_reason}","${r.q3}","${r.q4}","${r.q5}","${r.q6}","${r.q6_reason}","${r.q7}","${r.q7_reason}","${r.q8}","${r.q8_reason}","${r.q9}","${r.q9_wish}","${r.q10}","${r.q10_reason}","${r.q11}","${r.q12}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '목포청호초_설문조사_결과_' + new Date().toISOString().slice(0, 10) + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('모든 설문 응답 데이터를 삭제하시겠습니까? (이 작업은 되돌릴 수 없습니다)')) {
+                localStorage.removeItem('chungho_survey_responses_2027');
+                renderAdminDashboard();
+                showModal('초기화 완료', '모든 응답 데이터가 삭제되었습니다.');
+            }
+        }
+    </script>
+</body>
+</html>
