@@ -462,7 +462,7 @@
     <div id="adminModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200 m-4">
             <h3 class="font-bold text-lg text-slate-900 mb-2">관리자 로그인</h3>
-            <p id="adminModalDesc" class="text-xs text-slate-600 mb-4">관리자 비밀번호를 입력해 주세요. (기본: 2027)</p>
+            <p id="adminModalDesc" class="text-xs text-slate-600 mb-4">관리자 비밀번호를 입력해 주세요.</p>
             <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm mb-4 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             <div class="flex space-x-2">
                 <button onclick="closeAdminModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-2.5 rounded-xl text-sm font-medium transition">취소</button>
@@ -488,9 +488,16 @@
     </footer>
 
     <script>
+        // Default Google Apps Script Webhook URL (모든 기기에서 기본 연동)
+        const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzT4YTuunXJjNoz32SJVEHvnAjkkbmkXvHTJBLS-k3DZYAEye-WbckeO9NW-MJ969K5/exec';
+
+        function getWebhookUrl() {
+            return localStorage.getItem('chungho_webhook_url') || DEFAULT_WEBHOOK_URL;
+        }
+
         // Password helper
         function getCurrentAdminPassword() {
-            return localStorage.getItem('chungho_admin_pwd') || '2027';
+            return localStorage.getItem('chungho_admin_pwd') || '1234';
         }
 
         // Limit checkbox selection for Q5 and Q6 (Max 2)
@@ -556,13 +563,14 @@
             responses.unshift(formDataObj); // Add newest first
             localStorage.setItem('chungho_survey_responses_2027', JSON.stringify(responses));
 
-            // Sync with Google Apps Script Webhook if configured
-            const webhookUrl = localStorage.getItem('chungho_webhook_url');
+            // Sync with Google Apps Script Webhook
+            const webhookUrl = getWebhookUrl();
             if (webhookUrl) {
                 fetch(webhookUrl, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    keepalive: true,
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(formDataObj)
                 }).catch(err => console.log('Webhook sync notice:', err));
             }
@@ -654,11 +662,8 @@
             document.getElementById('completeView').classList.add('hidden');
             document.getElementById('adminView').classList.remove('hidden');
             
-            // Load Webhook URL input if saved
-            const savedWebhook = localStorage.getItem('chungho_webhook_url');
-            if (savedWebhook) {
-                document.getElementById('webhookUrl').value = savedWebhook;
-            }
+            // Load Webhook URL input (saved or default)
+            document.getElementById('webhookUrl').value = getWebhookUrl();
 
             renderAdminDashboard();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -671,7 +676,12 @@
 
         function saveWebhook() {
             const url = document.getElementById('webhookUrl').value.trim();
-            localStorage.setItem('chungho_webhook_url', url);
+            if (url) {
+                localStorage.setItem('chungho_webhook_url', url);
+            } else {
+                localStorage.removeItem('chungho_webhook_url');
+                document.getElementById('webhookUrl').value = DEFAULT_WEBHOOK_URL;
+            }
             showModal('저장 완료', '구글 스프레드시트 웹훅 URL이 저장되었습니다. 앞으로 설문 제출 시 자동으로 연동됩니다.');
         }
 
